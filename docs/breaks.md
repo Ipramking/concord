@@ -10,7 +10,7 @@ When Concord compares on-chain ledger events against off-chain books (the regist
 
 ### Scopes
 
-Breaks are partitioned into three note scopes ([`services/api/src/concord.ts`](file:///C:/Users/lenovo/wave-work/concord/services/api/src/concord.ts)):
+Breaks are partitioned into three note scopes ([`services/api/src/concord.ts`](../services/api/src/concord.ts)):
 - `recon`: Position breaks and journal movement breaks evaluated during register and movement reconciliation.
 - `controls`: Authorization, freeze, unfreeze, and clawback breaks evaluated against approved issuer instructions.
 - `action:<id>`: Corporate action breaks evaluated for a specific dividend, split, or redemption distribution.
@@ -41,7 +41,7 @@ Concord marks the note as stale (`noteStale: true`) and automatically reverts th
 
 ## 1. Position Breaks
 
-Defined in [`packages/core/src/reconcile.ts`](file:///C:/Users/lenovo/wave-work/concord/packages/core/src/reconcile.ts). Produced when comparing the on-chain `HoldingsState` derived from ledger events against the uploaded `RegisterPosition[]`.
+Defined in [`packages/core/src/reconcile.ts`](../packages/core/src/reconcile.ts). Produced when comparing the on-chain `HoldingsState` derived from ledger events against the uploaded `RegisterPosition[]`.
 
 | Type | Severity | Key Format | Description |
 |---|---|---|---|
@@ -137,7 +137,7 @@ Defined in [`packages/core/src/reconcile.ts`](file:///C:/Users/lenovo/wave-work/
 
 ## 2. Movement Breaks
 
-Defined in [`packages/core/src/movements.ts`](file:///C:/Users/lenovo/wave-work/concord/packages/core/src/movements.ts). Evaluated when a transaction journal CSV is imported, matching ledger transfer, mint, burn, and clawback events against off-chain journal records.
+Defined in [`packages/core/src/movements.ts`](../packages/core/src/movements.ts). Evaluated when a transaction journal CSV is imported, matching ledger transfer, mint, burn, and clawback events against off-chain journal records.
 
 | Type | Severity | Key Format | Description |
 |---|---|---|---|
@@ -182,7 +182,7 @@ Defined in [`packages/core/src/movements.ts`](file:///C:/Users/lenovo/wave-work/
 
 ## 3. Issuer Control Breaks
 
-Defined in [`packages/core/src/controls.ts`](file:///C:/Users/lenovo/wave-work/concord/packages/core/src/controls.ts). Ensures that every administrative intervention on Stellar (`set_authorized` freeze/unfreeze, authorization, and clawback) is backed by an authorized off-chain instruction within an allowable execution window (default 72 hours).
+Defined in [`packages/core/src/controls.ts`](../packages/core/src/controls.ts). Ensures that every administrative intervention on Stellar (`set_authorized` freeze/unfreeze, authorization, and clawback) is backed by an authorized off-chain instruction within an allowable execution window (default 72 hours).
 
 | Type | Severity | Key Format | Description |
 |---|---|---|---|
@@ -217,7 +217,7 @@ Defined in [`packages/core/src/controls.ts`](file:///C:/Users/lenovo/wave-work/c
 
 ## 4. Corporate Action / Distribution Breaks
 
-Defined in [`packages/core/src/distributions.ts`](file:///C:/Users/lenovo/wave-work/concord/packages/core/src/distributions.ts). Evaluated during corporate actions (cash/stock dividends, stock splits, pro-rata redemptions). Compares expected entitlement flows calculated from record-date holdings with observed ledger payments in the execution window.
+Defined in [`packages/core/src/distributions.ts`](../packages/core/src/distributions.ts). Evaluated during corporate actions (cash/stock dividends, stock splits, pro-rata redemptions). Compares expected entitlement flows calculated from record-date holdings with observed ledger payments in the execution window.
 
 | Type | Severity | Key Format | Description |
 |---|---|---|---|
