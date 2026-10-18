@@ -32,8 +32,10 @@ side comes from the ledger, and the register side is the file you upload. The
 `pnpm test` runs the unit and service tests. `pnpm dev` runs the API and the dashboard with reload.
 
 Configuration is by environment variable, or a `.env` file beside `package.json`; see
-[`.env.example`](./.env.example). With nothing set, mainnet uses free public RPC endpoints, which
-suit light use. Point `CONCORD_MAINNET_RPC_URLS` at a provider for anything more.
+[`.env.example`](./.env.example), and [`docs/CONFIGURATION.md`](./docs/CONFIGURATION.md) for every
+variable's default, accepted values and validation. With nothing set, mainnet uses free public
+RPC endpoints, which suit light use. Point `CONCORD_MAINNET_RPC_URLS` at a provider for anything
+more.
 
 Where the databases live, and what is safe to delete, is in
 [`docs/data-directory.md`](./docs/data-directory.md).
@@ -82,8 +84,8 @@ The audit pack format (JSON sections, CSV columns, period rules and file names) 
 ## Deploying
 
 The [`Dockerfile`](./Dockerfile) builds one image that serves the API and the dashboard. Give it
-a volume at `/data`, put TLS in front, and set `CONCORD_PUBLIC_URL` to the https address people
-open.
+a volume at `/data`, put TLS in front (see [`docs/deploy/nginx.md`](./docs/deploy/nginx.md) for an
+nginx and Certbot recipe), and set `CONCORD_PUBLIC_URL` to the https address people open.
 
 ```sh
 docker build -t concord .
@@ -97,7 +99,11 @@ always-on instance with a local disk. It does not fit serverless hosts.
 no persistent disk: every account, upload and sign-off is erased when the service restarts or
 spins down after fifteen idle minutes. `CONCORD_EPHEMERAL=1` makes the dashboard say so on every
 page. For anything people should come back to, use a paid instance with a disk at `/data` (or
-Fly.io, or a VPS) and remove that variable.
+Fly.io, or a VPS with [nginx](./docs/deploy/nginx.md)) and remove that variable.
+
+Before upgrading, read [`docs/versioning.md`](./docs/versioning.md): what a version number
+promises, what counts as breaking for the input files, the audit pack and the database, and why a
+downgrade means restoring a backup.
 
 Upgrading an existing instance, including how migrations run, taking a backup and rolling back, is
 covered in [`docs/upgrading.md`](./docs/upgrading.md).
@@ -163,7 +169,8 @@ reconciles on a timer: a new day's comparison needs that day's register.
 - **Decimals.** Classic assets carry seven. A contract token's are read from the contract; one
   that does not state them has to be told when it is watched.
 - **Email.** None is sent. Addresses are not verified at sign-up, invitations travel by link, and
-  password resets go through the operator.
+  password resets go through the operator. See [`docs/adr/0003-no-email.md`](./docs/adr/0003-no-email.md) for the
+  architectural decision and threat model.
 - **Scale.** One process, one SQLite file per workspace, holdings replayed from events in
   memory. It has run an asset with a thousand holders and seven thousand events comfortably; it
   has not been load-tested beyond that.
@@ -177,6 +184,8 @@ and a 2:1 split against it. It then writes a register, journal and instruction f
 with the chain in known ways to `data/demo/`, and prints what to watch. The script never opens a
 Concord database: you watch the asset with the network set to Testnet and upload the files by
 hand, the way a user would. The books it writes are invented, and exist for development only.
+[`docs/demo-testnet.md`](./docs/demo-testnet.md) walks through the whole flow: what the script
+prints, what to watch for on the chain, how to load the books, and why each break appears.
 
 ## Prior-art check
 
@@ -204,7 +213,9 @@ source for every finding, the kill criteria and the re-check schedule are kept i
 | Controls log | Every freeze, authorisation change and clawback, tied to the instruction that caused it |
 | Audit export | Regulator- and auditor-ready reports |
 
-Read-only. Concord never holds keys or moves money.
+Read-only. Concord never holds keys or moves money. The reasoning, the one exception (the testnet
+practice script), and the rules for proposals that would add signing are in
+[`docs/adr/0004-read-only.md`](./docs/adr/0004-read-only.md).
 
 ## Who buys it
 
