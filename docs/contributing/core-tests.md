@@ -1,12 +1,12 @@
 # Writing Tests in `packages/core`
 
-This guide explains how to write unit and reconciliation tests in [`packages/core`](file:///C:/Users/lenovo/wave-work/concord/packages/core).
+This guide explains how to write unit and reconciliation tests in [`packages/core`](../../packages/core).
 
 ---
 
 ## 1. Design Principles of `packages/core`
 
-[`packages/core`](file:///C:/Users/lenovo/wave-work/concord/packages/core) is the deterministic accounting engine of Concord. It operates under strict design constraints:
+[`packages/core`](../../packages/core) is the deterministic accounting engine of Concord. It operates under strict design constraints:
 - **Zero I/O:** No network requests, file system access, or database queries.
 - **No Clocks:** Current timestamps, historical windows, and cutoffs are passed in explicitly as arguments or ISO strings.
 - **Integer Accounting:** All token quantities and balances are exact `bigint` values in the asset's smallest unit (e.g. 7 decimals for classic Stellar assets, where 1 unit = `10_000_000n` stroops). No floating-point math is used.
@@ -17,7 +17,7 @@ Because core modules are pure functions over plain data, tests are fast, complet
 
 ## 2. Test Fixtures and Helpers
 
-The test suite lives in [`packages/core/test/`](file:///C:/Users/lenovo/wave-work/concord/packages/core/test/). Shared test helpers are located in [`packages/core/test/fixtures.ts`](file:///C:/Users/lenovo/wave-work/concord/packages/core/test/fixtures.ts).
+The test suite lives in [`packages/core/test/`](../../packages/core/test). Shared test helpers are located in [`packages/core/test/fixtures.ts`](../../packages/core/test/fixtures.ts).
 
 ### `u(n)`: Unit to Stroop Scaling
 ```typescript
@@ -47,7 +47,7 @@ const freezeEvent = ev("set_authorized", 3, { from: "B", authorized: false });
 
 ## 3. Test Structure & Naming Conventions
 
-Follow standard Vitest conventions as demonstrated in [`packages/core/test/core.test.ts`](file:///C:/Users/lenovo/wave-work/concord/packages/core/test/core.test.ts):
+Follow standard Vitest conventions as demonstrated in [`packages/core/test/core.test.ts`](../../packages/core/test/core.test.ts):
 
 ```typescript
 describe("position reconciliation", () => {
